@@ -4,6 +4,8 @@
     "build": "marp ./src/slide.md -o public/index.html --html"
   },
   "devDependencies": {
-    "@marp-team/marp-cli": "^1.5.2"
+    "@marp-team/marp-cli": "^1.5.2",
+    "textlint": "^12.1.0",
+    "textlint-rule-preset-ja-technical-writing": "^7.0.0"
   }
 }
