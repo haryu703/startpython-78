@@ -12,7 +12,7 @@ paginate: true
 - [haryu703](https://twitter.com/haryu703)
 - コインチェック株式会社 (2020~)
 - Ethereum 系は人並み
-- 普段は BCH など
+- 普段は Bitcoin Cash など
 
 ---
 
@@ -161,8 +161,50 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
 
 ---
 
+## 例) Testnet で発行したトークン (1/2)
+
+[ソースコード](https://github.com/haryu703/startpython-78/blob/master/example/contracts/MyToken.sol)
+
+```
+// 略
+
+contract MyToken is ERC721, Ownable {
+    using Counters for Counters.Counter;
+
+    Counters.Counter private _tokenIdCounter;
+
+    constructor() ERC721("MyToken", "MTK") {}
+
+    function _baseURI() internal pure override returns (string memory) {
+        return "https://opensea-creatures-api.herokuapp.com/api/creature/";
+    }
+
+    function safeMint(address to) public onlyOwner {
+        uint256 tokenId = _tokenIdCounter.current();
+        _tokenIdCounter.increment();
+        _safeMint(to, tokenId);
+    }
+}
+```
+
+---
+
+## 例) Testnet で発行したトークン (2/2)
+
+[Etherscan](https://rinkeby.etherscan.io/token/0x4dad99c50148954b8969878e0904ea94ed20c1d0?a=0)
+[OpenSea](https://testnets.opensea.io/assets/0x4dad99c50148954b8969878e0904ea94ed20c1d0/0)
+
+- ブロックチェーン上にあるトークン固有の情報は連番の ID だけ
+- ID に紐づく metadata は [OpenSea のチュートリアル](https://docs.opensea.io/docs/getting-started) のもの
+- 固有のコントラクトと ID で NFT が表現され、[発行](https://rinkeby.etherscan.io/tx/0x33c1ef7516b0b52bc73beec58b1eafbeffcd0f843704d7dff1e482c6d0e25f94)や[移動](https://rinkeby.etherscan.io/tx/0xce4cf51f34fb62ebfc47dc69b8168fbc10861f5236bc646b69af822b26b20076)などの操作も行える
+- OpenSea などマーケットプレイスのコントラクトと連携すれば販売などもできる
+  - metadata の規格は ERC721 とは別
+
+---
+
 ## 終わりに
 
 - NFT は実装だけみるとただの ID とアドレスのペア
+  - ID の重複がないトークンなので Non-Fungible Token と言える
 - ID に紐付ける情報によって NFT が表現するものや用途は変わる
-- 他の Dapps との連携やコントラクトの拡張など様々な応用も考えられている
+- 他のコントラクトとの連携や拡張など様々な応用も考えられている
